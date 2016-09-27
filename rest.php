@@ -30,7 +30,7 @@ class Menus {
   	  'schema' => array($this, 'getMenuSchema')
   	));
   	
-  	register_rest_route($this->namespace, '/menus/(?P<id>\d+)/items', array(
+  	register_rest_route($this->namespace, '/menus/(?P<menuId>\d+)/items', array(
   	  array(
   	   'methods'  => \WP_REST_Server::READABLE,
   	   'callback' => array($this, 'listMenuItems')
@@ -71,8 +71,27 @@ class Menus {
   }
   
   public function listMenuItems($data) {
-    $wpMenuItems = wp_get_nav_menu_items($data['id']);
-    return null;
+    $response = [];
+    $wpMenuItems = wp_get_nav_menu_items($data['menuId']);
+    foreach ($wpMenuItems as $wpMenuItem) {
+      $item = (array) $wpMenuItem;
+      $responseItem = array(
+        id => $item['object_id'],
+        title => $item['title'],
+        url => $item['url'],
+        type => $item['object'],
+        order => $item['menu_order'],
+        postId => null,
+        pageId => null
+      );
+      if($item['object'] == 'post') {
+        $responseItem['postId'] = $item['ID'];
+      } else if($item['object'] == 'page') {
+        $responseItem['pageId'] = $item['ID'];
+      }
+      $response[] = $responseItem;
+    }
+    return $response;
   }
   
   public function findMenuItem($id) {
@@ -85,7 +104,8 @@ class Menus {
   	  "title" => "menu",
   	  "properties" => array(
   	  	"id" => array (
-  	  	  "type" => "number"
+  	  	  "type" => "integer",
+          "format" => "int64"
   	  	),
   	  	"slug" => array (
   	  	  "type" => "string"
@@ -105,16 +125,19 @@ class Menus {
   	  "title" => "menuitem",
   	  "properties" => array(
   	  	"id" => array (
-  	  	  "type" => "number"
+  	  	  "type" => "integer",
+          "format" => "int64"
   	  	),
   	  	"slug" => array (
   	  	  "type" => "string"
   	  	),
   	  	"pageId" => array (
-  	  	  "type" => "number"
+  	  	  "type" => "integer",
+          "format" => "int64"
   	  	),
   	  	"pageParentId" => array (
-  	  	  "type" => "number"
+  	  	  "type" => "integer",
+          "format" => "int64"
   	  	),
   	  	"url" => array (
   	  	  "type" => "string"
