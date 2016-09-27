@@ -85,7 +85,8 @@ class Menus {
     foreach ($wpMenuItems as $wpMenuItem) {
       $item = (array) $wpMenuItem;
       $responseItem = array(
-        id => $item['object_id'],
+        id => $item['ID'],
+        parentItemId => $item['menu_item_parent'] > 0 ? $item['menu_item_parent'] : null,
         title => $item['title'],
         url => $item['url'],
         type => $item['object'],
@@ -129,6 +130,10 @@ class Menus {
   	  "title" => "menuitem",
   	  "properties" => array(
   	  	"id" => array (
+  	  	  "type" => "integer",
+          "format" => "int64"
+  	  	),
+        "parentItemId" => array (
   	  	  "type" => "integer",
           "format" => "int64"
   	  	),
