@@ -16,8 +16,13 @@ class Menus {
   public function registerRoutes() {
   	register_rest_route($this->namespace, '/menus', array(
   	  array(
-  		'methods'  => \WP_REST_Server::READABLE,
-  		'callback' => array($this, 'listMenus')
+        'methods'  => \WP_REST_Server::READABLE,
+        'callback' => array($this, 'listMenus'),
+        'args' => array(
+          'slug' => array(
+            'default' => null
+          ),
+        ),
   	  ),
   	  'schema' => array($this, 'getMenuSchema')
   	));
@@ -39,9 +44,13 @@ class Menus {
   	));
   }
 	
-  public function listMenus() {
+  public function listMenus($data) {
     $response = [];
-    $wpMenus = wp_get_nav_menus();
+    $filter = array();
+    if($data['slug'] != null) {
+      $filter['slug'] = $data['slug'];
+    }
+    $wpMenus = wp_get_nav_menus($filter);
     foreach ($wpMenus as $wpMenu) {
       $menu = (array) $wpMenu;
       $response[] = array(
