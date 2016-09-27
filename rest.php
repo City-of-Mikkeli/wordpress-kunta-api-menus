@@ -95,10 +95,11 @@ class Menus {
         pageId => null
       );
       if($item['object'] == 'post') {
-        $responseItem['postId'] = $item['ID'];
+        $responseItem['postId'] = $item['object_id'];
       } else if($item['object'] == 'page') {
-        $responseItem['pageId'] = $item['ID'];
+        $responseItem['pageId'] = $item['object_id'];
       }
+      
       $response[] = $responseItem;
     }
     return $response;
