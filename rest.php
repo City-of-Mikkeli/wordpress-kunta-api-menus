@@ -128,14 +128,21 @@ class Menus {
   	  	  "type" => "integer",
           "format" => "int64"
   	  	),
-  	  	"slug" => array (
+        "type" => array (
   	  	  "type" => "string"
+  	  	),
+        "title" => array (
+  	  	  "type" => "string"
+  	  	),
+        "order" => array (
+  	  	  "type" => "integer",
+          "format" => "int64"
   	  	),
   	  	"pageId" => array (
   	  	  "type" => "integer",
           "format" => "int64"
   	  	),
-  	  	"pageParentId" => array (
+  	  	"postId" => array (
   	  	  "type" => "integer",
           "format" => "int64"
   	  	),
