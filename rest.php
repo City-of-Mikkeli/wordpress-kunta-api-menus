@@ -19,7 +19,7 @@ class Menus {
   		'methods'  => \WP_REST_Server::READABLE,
   		'callback' => array($this, 'listMenus')
   	  ),
-  	  'schema' => array($this, 'listMenusSchema')
+  	  'schema' => array($this, 'getMenuSchema')
   	));
   	
   	register_rest_route($this->namespace, '/menus/(?P<id>\d+)', array(
@@ -27,7 +27,15 @@ class Menus {
   	   'methods'  => \WP_REST_Server::READABLE,
   	   'callback' => array($this, 'findMenu')
       ),
-  	  'schema' => array($this, 'findMenuSchema')
+  	  'schema' => array($this, 'getMenuSchema')
+  	));
+  	
+  	register_rest_route($this->namespace, '/menus/(?P<id>\d+)/items', array(
+  	  array(
+  	   'methods'  => \WP_REST_Server::READABLE,
+  	   'callback' => array($this, 'listMenuItems')
+      ),
+  	  'schema' => array($this, 'getMenuItemSchema')
   	));
   }
 	
@@ -47,7 +55,32 @@ class Menus {
     return $response;		
   }
   
-  public function listMenusSchema() {
+  public function findMenu($data) {
+  	$wp_menu = wp_get_nav_menu_object($data['id']);
+  	if (empty($wp_menu)) {
+  	  return new \WP_Error(404, 'Not found', array( 'status' => 404 ) );
+  	} else {
+	  $menu = (array) $wp_menu;
+	  return array(
+	  	id => $menu['term_id'],
+	  	slug => $menu['slug'],
+	  	name => $menu['name'],
+	  	description => $menu['description']
+	  );
+  	}
+  }
+  
+  public function listMenuItems($data) {
+    // TODO: Implement
+  	return [];
+  }
+  
+  public function findMenuItem($id) {
+  	// TODO: Implement
+  	return null;
+  }
+  
+  public function getMenuSchema() {
   	return array(
   	  "title" => "menu",
   	  "properties" => array(
@@ -67,37 +100,25 @@ class Menus {
   	);
   }
   
-  public function findMenu($id) {
-  	$wp_menu = wp_get_nav_menu_object($id);
-  	if (empty($wp_menu)) {
-  	  return new \WP_Error(404, 'Not found', array( 'status' => 404 ) );
-  	} else {
-	  $menu = (array) $wp_menu;
-	  return array(
-	  	id => $menu['term_id'],
-	  	slug => $menu['slug'],
-	  	name => $menu['name'],
-	  	description => $menu['description']
-	  );
-  	}
-  }
-  
-  public function findMenuSchema() {
+  public function getMenuItemSchema() {
   	return array(
-  	  "title" => "menu",
+  	  "title" => "menuitem",
   	  "properties" => array(
-  	     "id" => array (
-  			"type" => "number"
-  		 ),
-  		 "slug" => array (
-  		   "type" => "string"
-  		 ),
-  		 "name" => array (
-  		    "type" => "string"
-  		  ),
-  		  "description" => array (
-  		    "type" => "string"
-  		  )
+  	  	"id" => array (
+  	  	  "type" => "number"
+  	  	),
+  	  	"slug" => array (
+  	  	  "type" => "string"
+  	  	),
+  	  	"postId" => array (
+  	  	  "type" => "number"
+  	  	),
+  	  	"postParentId" => array (
+  	  	  "type" => "number"
+  	  	),
+  	  	"url" => array (
+  	  	  "type" => "string"
+  	  	)
   	  )
   	);
   }
