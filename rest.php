@@ -94,11 +94,6 @@ class Menus {
     return $response;
   }
   
-  public function findMenuItem($id) {
-  	// TODO: Implement
-  	return null;
-  }
-  
   public function getMenuSchema() {
   	return array(
   	  "title" => "menu",
