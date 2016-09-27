@@ -40,27 +40,27 @@ class Menus {
   }
 	
   public function listMenus() {
-	$response = [];
-	$wp_menus = wp_get_nav_menus();
-	foreach ($wp_menus as $wp_menu) {
-	  $menu = (array) $wp_menu;
-	  $response[] = array(
-	    id => $menu['term_id'],
-     	slug => $menu['slug'],
-	  	name => $menu['name'],
-	  	description => $menu['description']
-	  );
-	}
+    $response = [];
+    $wpMenus = wp_get_nav_menus();
+    foreach ($wpMenus as $wpMenu) {
+      $menu = (array) $wpMenu;
+      $response[] = array(
+        id => $menu['term_id'],
+        slug => $menu['slug'],
+        name => $menu['name'],
+        description => $menu['description']
+      );
+    }
 	 
     return $response;		
   }
   
   public function findMenu($data) {
-  	$wp_menu = wp_get_nav_menu_object($data['id']);
-  	if (empty($wp_menu)) {
+  	$wpMenu = wp_get_nav_menu_object($data['id']);
+  	if (empty($wpMenu)) {
   	  return new \WP_Error(404, 'Not found', array( 'status' => 404 ) );
   	} else {
-	  $menu = (array) $wp_menu;
+	  $menu = (array) $wpMenu;
 	  return array(
 	  	id => $menu['term_id'],
 	  	slug => $menu['slug'],
@@ -71,8 +71,8 @@ class Menus {
   }
   
   public function listMenuItems($data) {
-    // TODO: Implement
-  	return [];
+    $wpMenuItems = wp_get_nav_menu_items($data['id']);
+    return null;
   }
   
   public function findMenuItem($id) {
@@ -110,10 +110,10 @@ class Menus {
   	  	"slug" => array (
   	  	  "type" => "string"
   	  	),
-  	  	"postId" => array (
+  	  	"pageId" => array (
   	  	  "type" => "number"
   	  	),
-  	  	"postParentId" => array (
+  	  	"pageParentId" => array (
   	  	  "type" => "number"
   	  	),
   	  	"url" => array (
