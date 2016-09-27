@@ -10,7 +10,7 @@ class Menus {
   private $namespace;
   
   function __construct() {
-  	$this->namespace = "wp/v2";
+  	$this->namespace = "kunta-api";
   }
   
   public function registerRoutes() {
